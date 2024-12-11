@@ -3,8 +3,7 @@ import { commonmark, hardbreakKeymap } from "@milkdown/kit/preset/commonmark";
 import { emoji } from "@milkdown/plugin-emoji";
 import { nord } from "@milkdown/theme-nord";
 import { AttachIcon, EmojiIcon, SendIcon } from "solid-fluent-icons/24";
-import { createEffect, onCleanup, onMount } from "solid-js";
-import { JSX } from "solid-js/h/jsx-runtime";
+import { createSignal, onCleanup, onMount } from "solid-js";
 import { styled } from "solid-styled-components";
 
 const ChatInputBase = styled.div`
@@ -65,6 +64,7 @@ const ChatInputPlaceholder = styled.div`
 `;
 
 import { Component } from "solid-js";
+import { listener, listenerCtx } from "@milkdown/plugin-listener";
 
 const IconButton = ({ element }: { element: Component }) => {
     const El = styled(element)`
@@ -81,23 +81,31 @@ const IconButton = ({ element }: { element: Component }) => {
 
 const ChatInput = () => {
     let ref: HTMLDivElement | undefined;
-    createEffect(async () => {
+    let editor: Editor;
+    const [value, setValue] = createSignal("");
+    onMount(async () => {
         if (ref) {
-            let editor = await Editor
+            let e = await Editor
                 .make()
                 .config(ctx => {
                     ctx.set(rootCtx, ref);
                     ctx.set(defaultValueCtx, "");
                     ctx.set(hardbreakKeymap.key, { InsertHardbreak: "" })
+                    ctx.get(listenerCtx).updated((_, doc) => {
+                        console.log(doc.toString());
+                        setValue(doc.toString());
+                    });
                 })
                 .config(nord)
                 .use(commonmark)
                 .use(emoji)
+                .use(listener)
                 .create();
-            onCleanup(() => {
-                editor.destroy();
-            });
+            editor = e;
         }
+    });
+    onCleanup(() => {
+        editor.destroy();
     });
     return (
         <ChatInputBase>
@@ -109,7 +117,7 @@ const ChatInput = () => {
                 <IconButton element={EmojiIcon} />
                 <IconButton element={SendIcon} />
             </ChatInputControls>
-            <ChatInputPlaceholder hidden>
+            <ChatInputPlaceholder hidden={value() !== ""}>
                 {/* Message #general */}
                 Type a message...
             </ChatInputPlaceholder>

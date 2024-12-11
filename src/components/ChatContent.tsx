@@ -1,33 +1,10 @@
-import { ChannelIcon } from "solid-fluent-icons";
-import { createEffect, createSignal } from "solid-js";
+
 import { styled } from "solid-styled-components";
 import ChatInput from "./ChatInput";
-import MessageGroup from "./MessageGroup";
 import MessageRenderer from "./MessageRenderer";
+import { createEffect } from "solid-js";
 
-const ChatHeading= styled.div`
-    position: absolute;
-    width: calc(100% - 60px);
-    height: 50px;
-    border-radius: 5px;
-    background: rgba(54, 54, 54, 0.60);
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-    top: 10px;
-    left: 10px;
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-    padding-right: 20px;
-    justify-content: space-between;
-    backdrop-filter: blur(10px);
-`;
 
-const ChatContentBase = styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    position: relative;
-`;
 const ChatMessages = styled.div`
     width: 100%;
     height: 100%;
@@ -43,69 +20,6 @@ const ChatInputBox = styled.div`
     width: 100%;
     padding: 20px;
     box-sizing: border-box;
-`;
-
-
-const ChannelBasics = styled.div`
-    display: flex;
-    align-items: center;
-    & > * + * {
-        margin-left: 10px;
-    }
-    user-select: none;
-`;
-
-const ChannelName = styled.div`
-    font-size: 16px;
-
-`;
-
-const ChannelDescription = styled.div`
-    font-size: 12px;
-    font-weight: 300;
-    color: #9c9c9c;
-`;
-
-const ChannelControls = styled.div`
-    display: flex;
-    align-items: center;
-    & > * + * {
-        margin-left: 10px;
-    }
-    user-select: none;
-`
-
-const ChannelOption = styled.div<{ active?: boolean }>`
-    &:after{
-        content:"";
-        display:block;
-        width:0;
-        height:3px;
-        background-color:transparent;
-        margin-top:2px;
-    }
-    ${({ active }) => active ? `
-        &:after{
-            width:75%;
-            margin-left:12.5%;
-            background-color:#6A009B;
-            border-radius:5px;
-            transition:width 0.3s, margin-left 0.3s;
-        }
-        &:hover:after{
-            width:100%;
-            margin-left:0;
-        }
-            font-weight: 600;
-    `:``}
-    border-radius: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-top: 8px;
-    padding-bottom: 5px;
-    &:hover {
-        background: rgba(28, 28, 28, 0.5);
-    }
 `;
 
 const ChatBeginning = styled.div`
@@ -142,21 +56,18 @@ const ChatContent = () => {
     //         }
     //     }
     // });
+
+    let messagesRef: HTMLDivElement | undefined;
+
+    createEffect(() => {
+        if (messagesRef) {
+            messagesRef.scrollTop = messagesRef.scrollHeight;
+        }
+    })
       
     return (
-        <ChatContentBase>
-            <ChatHeading>
-                <ChannelBasics>
-                    <ChannelIcon />
-                    <ChannelName>General</ChannelName>
-                    <ChannelDescription>Hmm, what could this be about?</ChannelDescription>
-                </ChannelBasics>
-                <ChannelControls>
-                    <ChannelOption active>Text</ChannelOption>
-                    <ChannelOption>Voice</ChannelOption>
-                </ChannelControls>
-            </ChatHeading>
-            <ChatMessages>
+        <>
+            <ChatMessages ref={messagesRef}>
                 <ChatBeginning>
                     This is the beginning of the channel.
                 </ChatBeginning>
@@ -326,7 +237,7 @@ const ChatContent = () => {
             <ChatInputBox>
                 <ChatInput />
             </ChatInputBox>
-        </ChatContentBase>
+        </>
     )
 }
 

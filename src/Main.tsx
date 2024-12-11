@@ -3,10 +3,12 @@ import { styled } from "solid-styled-components";
 import logo from "./assets/nextflow.svg";
 import avatar from "./assets/default.png";
 import { ChevronDownIcon } from "solid-fluent-icons/12";
-import { AlertIcon, EditIcon, SettingsIcon } from "solid-fluent-icons/20";
+import { AlertIcon, AppFolderIcon, EditIcon, SettingsIcon } from "solid-fluent-icons/20";
 import { ChannelIcon, HomeIcon, MegaphoneIcon } from "solid-fluent-icons";
 import Avatar from "./components/Avatar";
-import ChatContent from "./components/ChatContent";
+import MemberCategory from "./components/MemberCategory";
+import { ParentProps } from "solid-js";
+import ChannelControlLink from "./components/ChannelControlLink";
 
 const MainContainer = styled.div`
     display: flex;
@@ -121,7 +123,7 @@ const Content = styled.div`
 `;
 
 const TopBar = styled.div`
-    height: 65px;
+    height: 50px;
     display: flex;
     justify-content: space-between;
     padding-left: 20px;
@@ -168,66 +170,6 @@ const Members = styled.div`
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 
-const MemberCategory = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
-`;
-
-const MemberCategoryHeading = styled.div`
-    display: flex;
-    align-items: center;
-    & > * + * {
-        margin-left: 8px;
-    }
-    border-radius: 5px;
-    padding-left: 5px;
-    padding-right: 5px;
-    &:hover {
-        background: rgba(50, 50, 50, 0.6);
-    }
-`;
-
-const MemberCategoryTitle = styled.div`
-    font-size: 16px;
-    font-weight: 500;
-    user-select: none;
-`;
-
-const MemberCategoryCount = styled.div`
-    font-size:14px;
-    font-weight:300;
-    user-select: none;
-`;
-
-const MemberList = styled.div`
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    & > * + * {
-        margin-top: 10px;
-    }
-`;
-
-const Member = styled.div`
-    display: flex;
-    & > * + * {
-        margin-left: 10px;
-    }
-    align-items: center;
-    margin-left: 25px;
-`;
-
-const MemberName = styled.div`
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    user-select: none;
-`;
-
 const SettingsButton = styled.div`
     border-radius: 5px;
     padding: 15px;
@@ -239,15 +181,71 @@ const SettingsButton = styled.div`
     align-items: center;
 `;
 
-const Main = () => {
+
+const ChatContentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+`;
+
+
+
+const ChannelBasics = styled.div`
+    display: flex;
+    align-items: center;
+    & > * + * {
+        margin-left: 10px;
+    }
+    user-select: none;
+`;
+
+const ChannelName = styled.div`
+    font-size: 16px;
+
+`;
+
+const ChannelDescription = styled.div`
+    font-size: 12px;
+    font-weight: 300;
+    color: #9c9c9c;
+`;
+
+const ChannelControls = styled.div`
+    display: flex;
+    align-items: center;
+    & > * + * {
+        margin-left: 10px;
+    }
+    user-select: none;
+`;
+
+const ChatHeading= styled.div`
+    position: absolute;
+    width: calc(100% - 60px);
+    height: 50px;
+    border-radius: 5px;
+    background: rgba(54, 54, 54, 0.60);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    top: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    justify-content: space-between;
+    backdrop-filter: blur(10px);
+`;
+
+const Main = (props: ParentProps) => {
     return (
         <MainContainer>
             <Sidebar>
                 <SpaceHeading>
                     <SpaceHeadingInner>
-                        <img src={logo} alt="Nextflow" width="40" height="40" />
+                        <img src={logo} alt="Nextia" width="40" height="40" />
                         <SpaceHeadingText>
-                            Nextflow Technologies
+                            Nextia Technologies
                         </SpaceHeadingText>
                     </SpaceHeadingInner>
                     <ChevronDownIcon />
@@ -289,40 +287,56 @@ const Main = () => {
                     </Search>
                     <User>
                         <SettingsButton>
-                        <SettingsIcon />
+                            <AppFolderIcon />
+                        </SettingsButton>
+                        <SettingsButton>
+                            <SettingsIcon />
                         </SettingsButton>
                         <Avatar main url={avatar} status="busy_notify" />
                     </User>
                 </TopBar>
                 <Chat>
-                    <ChatContent />
+                    <ChatContentContainer>
+                        <ChatHeading>
+                            <ChannelBasics>
+                                <ChannelIcon />
+                                <ChannelName>General</ChannelName>
+                                <ChannelDescription>Hmm, what could this be about?</ChannelDescription>
+                            </ChannelBasics>
+                            <ChannelControls>
+                                <ChannelControlLink type="text">Text</ChannelControlLink>
+                                <ChannelControlLink type="voice">Voice</ChannelControlLink>
+                            </ChannelControls>
+                        </ChatHeading>
+                        {props.children}
+                    </ChatContentContainer>
                     <Members>
-                        <MemberCategory>
-                            <MemberCategoryHeading>
-                                <ChevronDownIcon />
-                                <MemberCategoryTitle>Online</MemberCategoryTitle>
-                                <MemberCategoryCount>(4)</MemberCategoryCount>
-                            </MemberCategoryHeading>
-                            <MemberList>
-                                <Member>
-                                    <Avatar url={avatar} status="online" />
-                                    <MemberName>Azira</MemberName>
-                                </Member>
-                                <Member>
-                                    <Avatar url={avatar} status="busy" />
-                                    <MemberName>Emperor of Bluegaria</MemberName>
-                                </Member>
-                                <Member>
-                                    <Avatar url={avatar} status="busy_notify" />
-                                    <MemberName>One world</MemberName>
-                                </Member>
-                                <Member>
-                                    <Avatar url={avatar} status="away" />
-                                    <MemberName>⋆༺𓆩Nyss𓆪༻⋆</MemberName>
-                                </Member>
-                                
-                            </MemberList>
-                        </MemberCategory>
+                        <MemberCategory category={{
+                            name: "Online",
+                            count: 4,
+                            members: [
+                                {
+                                    name: "Azira",
+                                    avatar: avatar,
+                                    status: "online"
+                                },
+                                {
+                                    name: "Emperor of Bluegaria",
+                                    avatar: avatar,
+                                    status: "busy"
+                                },
+                                {
+                                    name: "One world",
+                                    avatar: avatar,
+                                    status: "busy_notify"
+                                },
+                                {
+                                    name: "⋆༺𓆩Nyss𓆪༻⋆",
+                                    avatar: avatar,
+                                    status: "away"
+                                }
+                            ]
+                        }} />
                     </Members>
                 </Chat>
             </Content>
