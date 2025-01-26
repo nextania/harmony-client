@@ -13,15 +13,17 @@ const AvatarContainer = styled.svg<{ main?: boolean }>`
             filter: drop-shadow(0px 0px 10px #9153ad);
         }
         transition: filter 0.2s;
+        padding-left: 10px;
     ` : ""}
     user-select: none;
 `
 
 interface Props {
     url: string;
-    status: "online" | "away" | "busy"| "busy_notify" | "offline";
+    status: Status;
     main?: boolean;
 }
+export type Status = "online" | "away" | "busy"| "busy_notify" | "offline";
 
 const statusColors = {
     online: "#5EFFB9",

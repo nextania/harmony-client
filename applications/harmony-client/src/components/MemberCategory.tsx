@@ -1,8 +1,10 @@
 import { styled } from "solid-styled-components";
-import { ChevronDownIcon, ChevronRightIcon } from "solid-fluent-icons/12";
+import ChevronDownIcon from "@fluentui/svg-icons/icons/chevron_down_12_regular.svg?raw";
+import ChevronRightIcon from "@fluentui/svg-icons/icons/chevron_right_12_regular.svg?raw";
 import Avatar from "./Avatar";
 import avatar from "./assets/default.png";
-import { createSignal } from "solid-js";
+import { createSignal, For } from "solid-js";
+import Icon from "./Icon";
 
 const MemberCategoryBase = styled.div`
     display: flex;
@@ -83,17 +85,19 @@ const MemberCategory = ({ category }: { category: MemberCategoryCollection }) =>
     return (
         <MemberCategoryBase>
             <MemberCategoryHeading onClick={() => setCollapsed(!collapsed())}>
-                {collapsed() ? <ChevronRightIcon /> : <ChevronDownIcon /> }
+                {collapsed() ? <Icon innerHTML={ChevronRightIcon} /> : <Icon innerHTML={ChevronDownIcon} /> }
                 <MemberCategoryTitle>{category.name}</MemberCategoryTitle>
                 <MemberCategoryCount>({category.count})</MemberCategoryCount>
             </MemberCategoryHeading>
             <MemberList>
-                {category.members.map(member => (
-                    <Member collapsed={collapsed()}>
-                        <Avatar url={member.avatar} status={member.status} />
-                        <MemberName>{member.name}</MemberName>
-                    </Member>
-                ))}
+                <For each={category.members}>
+                    {member => (
+                        <Member collapsed={collapsed()}>
+                            <Avatar url={member.avatar} status={member.status} />
+                            <MemberName>{member.name}</MemberName>
+                        </Member>
+                    )}
+                </For>
             </MemberList>
         </MemberCategoryBase>
     )

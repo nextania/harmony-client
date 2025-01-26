@@ -1,4 +1,4 @@
-import { createMemo } from "solid-js";
+import { createMemo, For } from "solid-js";
 import MessageGroup from "./MessageGroup";
 
 export interface User {
@@ -37,9 +37,9 @@ const MessageRenderer = ({ messages }: { messages: Message[] }) => {
 
     return (
         <>
-            {value().map((group) => (
-                <MessageGroup messages={group} />
-            ))}
+            <For each={value()} fallback={<div>No messages</div>}>
+                {(group) => <MessageGroup messages={group} />}
+            </For>
         </>
     )
 };

@@ -1,0 +1,11 @@
+{
+    "name": "harmony-api",
+    "main": "src/index.ts",
+    "dependencies": {
+        "@msgpack/msgpack": "^3.0.0-beta2",
+        "eventemitter3": "^5.0.1"
+    },
+    "devDependencies": {
+        "typescript": "^5.7.2"
+    }
+}

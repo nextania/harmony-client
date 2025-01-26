@@ -1,4 +1,4 @@
-import { useLocation, useResolvedPath, useNavigate } from "@solidjs/router";
+import { useLocation, useResolvedPath, useNavigate, useMatch } from "@solidjs/router";
 import { createMemo, ParentProps } from "solid-js";
 import { styled } from "solid-styled-components";
 
@@ -42,19 +42,29 @@ const ChannelOption = styled.div<{ active?: boolean }>`
     }
 `;
 
+// const ChannelControlLink = (props: ParentProps<{ type: ChannelType, end?: boolean }>) => {
+//     const to = useResolvedPath(() => "/app/" + props.type);
+//     const location = useLocation();
+//     const isActive = createMemo(() => {
+//         const to_ = to();
+//         if (to_ === undefined) return false;
+//         const path = normalizePath(to_.split(/[?#]/, 1)[0]).toLowerCase();
+//         const loc = decodeURI(normalizePath(location.pathname).toLowerCase());
+//         return props.end ? path === loc : loc.startsWith(path + "/") || loc === path;
+//     });
+//     const navigate = useNavigate();
+//     return (
+//         <ChannelOption active={isActive()} onClick={() => navigate("/app/" + props.type)}>
+//             {props.children}
+//         </ChannelOption>
+//     )
+// }
+
 const ChannelControlLink = (props: ParentProps<{ type: ChannelType, end?: boolean }>) => {
-    const to = useResolvedPath(() => "/app/" + props.type);
-    const location = useLocation();
-    const isActive = createMemo(() => {
-        const to_ = to();
-        if (to_ === undefined) return false;
-        const path = normalizePath(to_.split(/[?#]/, 1)[0]).toLowerCase();
-        const loc = decodeURI(normalizePath(location.pathname).toLowerCase());
-        return props.end ? path === loc : loc.startsWith(path + "/") || loc === path;
-    });
+    const match = useMatch(() => "/app/:spaces/:space?/channels/:channel/:type");
     const navigate = useNavigate();
     return (
-        <ChannelOption active={isActive()} onClick={() => navigate("/app/" + props.type)}>
+        <ChannelOption active={match()?.params.type === props.type} onClick={() => navigate(match()?.path + "/../" + props.type)}>
             {props.children}
         </ChannelOption>
     )

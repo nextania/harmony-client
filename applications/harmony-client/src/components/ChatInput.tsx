@@ -2,7 +2,9 @@ import { defaultValueCtx, Editor, rootCtx } from "@milkdown/kit/core";
 import { commonmark, hardbreakKeymap } from "@milkdown/kit/preset/commonmark";
 import { emoji } from "@milkdown/plugin-emoji";
 import { nord } from "@milkdown/theme-nord";
-import { AttachIcon, EmojiIcon, SendIcon } from "solid-fluent-icons/24";
+import AttachIcon from "@fluentui/svg-icons/icons/attach_24_regular.svg?raw";
+import EmojiIcon from "@fluentui/svg-icons/icons/emoji_24_regular.svg?raw";
+import SendIcon from "@fluentui/svg-icons/icons/send_24_regular.svg?raw";
 import { createSignal, onCleanup, onMount } from "solid-js";
 import { styled } from "solid-styled-components";
 
@@ -65,9 +67,10 @@ const ChatInputPlaceholder = styled.div`
 
 import { Component } from "solid-js";
 import { listener, listenerCtx } from "@milkdown/plugin-listener";
+import Icon from "./Icon";
 
-const IconButton = ({ element }: { element: Component }) => {
-    const El = styled(element)`
+const IconButton = ({ element }: { element: string }) => {
+    const El = styled(Icon)`
         &:hover{
             filter: drop-shadow(0 0 4px #9900ff);
             color: #fff;
@@ -75,7 +78,7 @@ const IconButton = ({ element }: { element: Component }) => {
         transition: filter 0.2s;
     `;
 
-    return <El />;
+    return <El innerHTML={element} />;
 }
 
 
